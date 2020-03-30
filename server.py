@@ -24,6 +24,10 @@ logo = Div(text=ST_LOGO, style={'font-size': '30px'}, width=SPACE_WIDTH, height=
 space = Div(text='', style={'font-size': '30px'}, width=SPACE_WIDTH, height=BOX_HEIGHT)
 space_2 = Div(text=f"""<hr style="color:{BLUE_1}" />""", width=SPACE_WIDTH)
 
+title_1 = Div(text='pre vs post metrics', style={'font-size': '30px'}, width=SPACE_WIDTH, height=BOX_HEIGHT)
+title_2 = Div(text='visit by visit metrics', style={'font-size': '30px'}, width=SPACE_WIDTH, height=BOX_HEIGHT)
+title_3 = Div(text='Overall population metrics', style={'font-size': '30px'}, width=SPACE_WIDTH, height=BOX_HEIGHT)
+
 
 def make_figure(tools, height, width, title, xlabel, ylabel, yrange=None, yticker=None, xticker=None, xlabeloverride=None, ylabeloverride=None,
                 xlabelorientation=None):
@@ -177,7 +181,7 @@ def button_callback():
         log.logger.info(f'logging for user {os.environ["APP_RESEARCH_USER"]}')
         curdoc().clear()
         initial_run()
-        l = layout([column(row(gender_select, med_select, location_select, numdev_select, race_select), compute_button), data_table_1, data_table_2, data_table_3])
+        l = layout([[head], [space_2], column(row(gender_select, med_select, location_select, numdev_select, race_select), compute_button), title_1, data_table_1, title_2, data_table_2, title_3, data_table_3])
 
         curdoc().add_root(l)
     else:
