@@ -61,31 +61,30 @@ def make_figure(tools, height, width, title, xlabel, ylabel, yrange=None, yticke
 
 def initial_run():
     global df
-    global data_table_1
-    global data_table_2
-    global data_table_3
-    global gender_select, med_select, location_select, numdev_select, race_select
+    global data_table_1, data_table_2, data_table_3
+    global gender_select, med_select, location_select, numdev_select, race_select, noisy_select, age_select
     global compute_button
-    global source_1
-    global source_2
-    global source_3
+    global source_1, source_2, source_3
 
-    compute_button = Button(label="Recompute stats", button_type='success')
+    compute_button = Button(label="Recompute stats", button_type='success', width=200)
 
-    gender_select = Select(title="gender selection", value="all", options=["all", "F", "M"], width=250)
+    noisy_select = Select(title="Noisy device selection", value="all", options=["all", "noisy", "not noisy"], width=200)
 
-    med_select = Select(title="medication status selection", value="all", options=["all", "Med", "Unmed"], width=250)
+    gender_select = Select(title="gender selection", value="all", options=["all", "F", "M"], width=200)
 
-    numdev_select = Select(title="Number of devices selection", value="all", options=["all", "1", "2", "3", "4"], width=250)
+    med_select = Select(title="medication status selection", value="all", options=["all", "Med", "Unmed"], width=200)
 
-    location_select = Select(title="Location selection", value="all", options=["all", "Charlottesville", "Charlotte", "Woodlands", "Sugarland"], width=250)
+    numdev_select = Select(title="Number of devices selection", value="all", options=["all", "1", "2", "3", "4"], width=200)
 
-    race_select = Select(title="Race selection", value="all", options=['all', 'Caucasian', 'African American', 'Did not fill', 'Hispanic', 'Asian', 'Caucasian & African American'], width=250)
+    location_select = Select(title="Location selection", value="all", options=["all", "Charlottesville", "Charlotte", "Woodlands", "Sugarland"], width=200)
+
+    race_select = Select(title="Race selection", value="all", options=['all', 'Caucasian', 'African American', 'Did not fill', 'Hispanic', 'Asian', 'Caucasian & African American'], width=200)
+
+    age_select = Select(title="Age selection", value="all", options = ['all', '40+', 'between 20 and 30', 'between 30 and 40'], width=200)
 
     df = pd.read_csv('s3://science-box/clinical_trial/trial_v2.csv')
 
     df = pre_transform_df(df)
-
 
     results = stat_summary(df, stat_tests=True)
 
@@ -122,7 +121,17 @@ def stat_recompute():
     selected_loc = str(location_select.value)
     selected_dev = numdev_select.value
     selected_race = str(race_select.value)
+    selected_noisy = str(noisy_select.value)
+    selected_age = str(age_select.value)
 
+
+
+    if selected_noisy == 'noisy':
+        noisy = [True]
+    elif selected_noisy == 'not noisy':
+        noisy = [False]
+    else:
+        noisy = [True, False]
 
     if selected_gender == 'all':
         genders = ["M", "F"]
@@ -142,6 +151,12 @@ def stat_recompute():
     else:
         loc = [selected_loc]
 
+    if selected_age == 'all':
+        age = ['40+', 'between 20 and 30', 'between 30 and 40']
+
+    else:
+        age = [selected_age]
+
     if selected_dev == 'all':
         dev = [1, 2, 3, 4]
 
@@ -155,7 +170,8 @@ def stat_recompute():
     else:
         race = [selected_race]
 
-    tmp_df = df[(df.Gender.isin(genders)) & (df['Medication Status'].isin(med)) & (df['Location'].isin(loc)) & (df['# Devices'].isin(dev)) & (df['Race'].isin(race))]
+
+    tmp_df = df[(df.Gender.isin(genders)) & (df['Medication Status'].isin(med)) & (df['Location'].isin(loc)) & (df['# Devices'].isin(dev)) & (df['Race'].isin(race)) & (df['noisy'].isin(noisy)) & (df['age_group'].isin(age))]
 
     results = stat_summary(tmp_df, stat_tests=True)
 
@@ -181,7 +197,7 @@ def button_callback():
         log.logger.info(f'logging for user {os.environ["APP_RESEARCH_USER"]}')
         curdoc().clear()
         initial_run()
-        l = layout([[head], [space_2], column(row(gender_select, med_select, location_select, numdev_select, race_select), compute_button), title_1, data_table_1, title_2, data_table_2, title_3, data_table_3])
+        l = layout([[head], [space_2], column(row(gender_select, med_select, location_select, numdev_select, noisy_select, race_select, age_select), compute_button), title_1, data_table_1, title_2, data_table_2, title_3, data_table_3])
 
         curdoc().add_root(l)
     else:
