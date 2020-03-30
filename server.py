@@ -27,6 +27,8 @@ space_2 = Div(text=f"""<hr style="color:{BLUE_1}" />""", width=SPACE_WIDTH)
 title_1 = Div(text='pre vs post metrics', style={'font-size': '30px'}, width=SPACE_WIDTH, height=BOX_HEIGHT)
 title_2 = Div(text='visit by visit metrics', style={'font-size': '30px'}, width=SPACE_WIDTH, height=BOX_HEIGHT)
 title_3 = Div(text='Overall population metrics', style={'font-size': '30px'}, width=SPACE_WIDTH, height=BOX_HEIGHT)
+title_4 = Div(text='p values for active vs sham tests', style={'font-size': '30px'}, width=SPACE_WIDTH, height=BOX_HEIGHT)
+title_5 = Div(text='p values for pre vs post tests', style={'font-size': '30px'}, width=SPACE_WIDTH, height=BOX_HEIGHT)
 
 
 def make_figure(tools, height, width, title, xlabel, ylabel, yrange=None, yticker=None, xticker=None, xlabeloverride=None, ylabeloverride=None,
@@ -61,10 +63,10 @@ def make_figure(tools, height, width, title, xlabel, ylabel, yrange=None, yticke
 
 def initial_run():
     global df
-    global data_table_1, data_table_2, data_table_3
+    global data_table_1, data_table_2, data_table_3, data_table_4, data_table_5
     global gender_select, med_select, location_select, numdev_select, race_select, noisy_select, age_select, comp_select
     global compute_button
-    global source_1, source_2, source_3
+    global source_1, source_2, source_3, source_4, source_5
 
     compute_button = Button(label="Recompute stats", button_type='success', width=200)
 
@@ -96,6 +98,12 @@ def initial_run():
 
     result_3 = results[2].reset_index()
 
+    result_4 = results[3].reset_index()
+
+    result_5 = results[4].reset_index()
+
+
+
     columns_1 = [TableColumn(field=Ci, title=Ci) for Ci in result_1.columns]
 
     source_1 = ColumnDataSource(result_1)
@@ -112,6 +120,18 @@ def initial_run():
 
     source_3 = ColumnDataSource(result_3)
     data_table_3 = DataTable(columns=columns_3, source=source_3, height=200,
+                             width=1600)
+
+    columns_4 = [TableColumn(field=Ci, title=Ci) for Ci in result_4.columns]
+
+    source_4 = ColumnDataSource(result_4)
+    data_table_4 = DataTable(columns=columns_4, source=source_4, height=200,
+                             width=1600)
+
+    columns_5 = [TableColumn(field=Ci, title=Ci) for Ci in result_5.columns]
+
+    source_5 = ColumnDataSource(result_5)
+    data_table_5 = DataTable(columns=columns_5, source=source_5, height=200,
                              width=1600)
 
     compute_button.on_click(stat_recompute)
@@ -190,6 +210,10 @@ def stat_recompute():
 
     result_3 = results[2].reset_index()
 
+    result_4 = results[3].reset_index()
+
+    result_5 = results[4].reset_index()
+
     new_source_1 = ColumnDataSource(result_1)
     source_1.data = new_source_1.data
 
@@ -199,6 +223,12 @@ def stat_recompute():
     new_source_3 = ColumnDataSource(result_3)
     source_3.data = new_source_3.data
 
+    new_source_4 = ColumnDataSource(result_4)
+    source_4.data = new_source_4.data
+
+    new_source_5 = ColumnDataSource(result_5)
+    source_5.data = new_source_5.data
+
 
 def button_callback():
     space.text = ''
@@ -206,7 +236,7 @@ def button_callback():
         log.logger.info(f'logging for user {os.environ["APP_RESEARCH_USER"]}')
         curdoc().clear()
         initial_run()
-        l = layout([[head], [space_2], column(row(gender_select, med_select, location_select, numdev_select, noisy_select, race_select, age_select, comp_select), compute_button), title_1, data_table_1, title_2, data_table_2, title_3, data_table_3])
+        l = layout([[head], [space_2], column(row(gender_select, med_select, location_select, numdev_select, noisy_select, race_select, age_select, comp_select), compute_button), title_1, data_table_1, title_2, data_table_2, title_3, data_table_3, title_4, data_table_4, title_5, data_table_5])
 
         curdoc().add_root(l)
     else:

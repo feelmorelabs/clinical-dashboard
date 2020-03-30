@@ -1,23 +1,33 @@
 import numpy as np
 import pandas as pd
 from scipy.stats import ttest_ind, f_oneway, wilcoxon, mannwhitneyu, chi2_contingency
+from decimal import Decimal
 
 
-def cohen_d(x,y):
+def decimal_format(val):
+    try:
+        return '%.2E' % Decimal(val)
+    except:
+        return val
+
+
+def cohen_d(x, y):
     nx = len(x)
     ny = len(y)
     dof = nx + ny - 2
-    return (np.mean(x) - np.mean(y)) / np.sqrt(((nx-1)*np.std(x, ddof=1) ** 2 + (ny-1)*np.std(y, ddof=1) ** 2) / dof)
+    return (np.mean(x) - np.mean(y)) / np.sqrt(
+        ((nx - 1) * np.std(x, ddof=1) ** 2 + (ny - 1) * np.std(y, ddof=1) ** 2) / dof)
 
 
 def age_group(row):
-    if row< 18:
+    if row < 18:
         return '<18'
     if row >= 18 and row <= 30:
         return 'between 20 and 30'
     if row >= 30 and row <= 40:
         return 'between 30 and 40'
     return '40+'
+
 
 def make_groups(row):
     if row < 5:
@@ -106,14 +116,14 @@ def stat_summary(df, stat_tests=False):
         n_sham)
 
     pct_change_hama_active = 100 * ((df[df.State == 'active']['HAM-A-V4'] - df[df.State == 'active']['HAM-A-V1']) / (
-    df[df.State == 'active']['HAM-A-V1'])).mean()
+        df[df.State == 'active']['HAM-A-V1'])).mean()
     pct_change_hama_sham = 100 * ((df[df.State == 'sham']['HAM-A-V4'] - df[df.State == 'sham']['HAM-A-V1']) / (
-    df[df.State == 'sham']['HAM-A-V1'])).mean()
+        df[df.State == 'sham']['HAM-A-V1'])).mean()
 
     pct_change_hama_active_se = 100 * ((df[df.State == 'active']['HAM-A-V4'] - df[df.State == 'active']['HAM-A-V1']) / (
-    df[df.State == 'active']['HAM-A-V1'])).std() / np.sqrt(n_active)
+        df[df.State == 'active']['HAM-A-V1'])).std() / np.sqrt(n_active)
     pct_change_hama_sham_se = 100 * ((df[df.State == 'sham']['HAM-A-V4'] - df[df.State == 'sham']['HAM-A-V1']) / (
-    df[df.State == 'sham']['HAM-A-V1'])).std() / np.sqrt(n_sham)
+        df[df.State == 'sham']['HAM-A-V1'])).std() / np.sqrt(n_sham)
 
     # pct_change_hama_active_3 = 100 * ((df[df.State == 'active']['HAM-A-V3'] - df[df.State == 'active']['HAM-A-V1']) / (df[df.State == 'active']['HAM-A-V1'])).mean()
     # pct_change_hama_sham_3 = 100 * ((df[df.State == 'sham']['HAM-A-V3'] - df[df.State == 'sham']['HAM-A-V1']) / (df[df.State == 'sham']['HAM-A-V1'])).mean()
@@ -159,14 +169,14 @@ def stat_summary(df, stat_tests=False):
     change_gad_sham_se = (df[df.State == 'sham']['GAD-V4'] - df[df.State == 'sham']['GAD-V1']).std() / np.sqrt(n_sham)
 
     pct_change_gad_active = 100 * ((df[df.State == 'active']['GAD-V4'] - df[df.State == 'active']['GAD-V1']) / (
-    df[df.State == 'active']['GAD-V1'])).mean()
+        df[df.State == 'active']['GAD-V1'])).mean()
     pct_change_gad_sham = 100 * ((df[df.State == 'sham']['GAD-V4'] - df[df.State == 'sham']['GAD-V1']) / (
-    df[df.State == 'sham']['GAD-V1'])).mean()
+        df[df.State == 'sham']['GAD-V1'])).mean()
 
     pct_change_gad_active_se = 100 * ((df[df.State == 'active']['GAD-V4'] - df[df.State == 'active']['GAD-V1']) / (
-    df[df.State == 'active']['GAD-V1'])).std() / np.sqrt(n_active)
+        df[df.State == 'active']['GAD-V1'])).std() / np.sqrt(n_active)
     pct_change_gad_sham_se = 100 * ((df[df.State == 'sham']['GAD-V4'] - df[df.State == 'sham']['GAD-V1']) / (
-    df[df.State == 'sham']['GAD-V1'])).std() / np.sqrt(n_sham)
+        df[df.State == 'sham']['GAD-V1'])).std() / np.sqrt(n_sham)
 
     # pct_change_gad_active_3 = 100 * ((df[df.State == 'active']['GAD-V3'] - df[df.State == 'active']['GAD-V1']) / (df[df.State == 'active']['GAD-V1'])).mean()
     # pct_change_gad_sham_3 = 100 * ((df[df.State == 'sham']['GAD-V3'] - df[df.State == 'sham']['GAD-V1']) / (df[df.State == 'sham']['GAD-V1'])).mean()
@@ -261,14 +271,14 @@ def stat_summary(df, stat_tests=False):
         n_sham)
 
     pct_change_cgis_active = 100 * ((df[df.State == 'active']['CGIs-V4'] - df[df.State == 'active']['CGIs-V1']) / (
-    df[df.State == 'active']['CGIs-V1'])).mean()
+        df[df.State == 'active']['CGIs-V1'])).mean()
     pct_change_cgis_sham = 100 * ((df[df.State == 'sham']['CGIs-V4'] - df[df.State == 'sham']['CGIs-V1']) / (
-    df[df.State == 'sham']['CGIs-V1'])).mean()
+        df[df.State == 'sham']['CGIs-V1'])).mean()
 
     pct_change_cgis_active_se = 100 * ((df[df.State == 'active']['CGIs-V4'] - df[df.State == 'active']['CGIs-V1']) / (
-    df[df.State == 'active']['CGIs-V1'])).std() / np.sqrt(n_active)
+        df[df.State == 'active']['CGIs-V1'])).std() / np.sqrt(n_active)
     pct_change_cgis_sham_se = 100 * ((df[df.State == 'sham']['CGIs-V4'] - df[df.State == 'sham']['CGIs-V1']) / (
-    df[df.State == 'sham']['CGIs-V1'])).std() / np.sqrt(n_sham)
+        df[df.State == 'sham']['CGIs-V1'])).std() / np.sqrt(n_sham)
 
     # pct_change_cgis_active_3 = 100 * ((df[df.State == 'active']['CGIs-V3'] - df[df.State == 'active']['CGIs-V1']) / (df[df.State == 'active']['CGIs-V1'])).mean()
     # pct_change_cgis_sham_3 = 100 * ((df[df.State == 'sham']['CGIs-V3'] - df[df.State == 'sham']['CGIs-V1']) / (df[df.State == 'sham']['CGIs-V1'])).mean()
@@ -479,13 +489,13 @@ def stat_summary(df, stat_tests=False):
 
     unmed_m_count = df[(df['Medication Status'] == 'Unmed') & (df['Gender'] == 'M')].shape[0]
     unmed_m_count_active = \
-    df[(df['Medication Status'] == 'Unmed') & (df.State == 'active') & (df['Gender'] == 'M')].shape[0]
+        df[(df['Medication Status'] == 'Unmed') & (df.State == 'active') & (df['Gender'] == 'M')].shape[0]
     unmed_m_count_sham = df[(df['Medication Status'] == 'Unmed') & (df.State == 'sham') & (df['Gender'] == 'M')].shape[
         0]
 
     unmed_f_count = df[(df['Medication Status'] == 'Unmed') & (df['Gender'] == 'F')].shape[0]
     unmed_f_count_active = \
-    df[(df['Medication Status'] == 'Unmed') & (df.State == 'active') & (df['Gender'] == 'F')].shape[0]
+        df[(df['Medication Status'] == 'Unmed') & (df.State == 'active') & (df['Gender'] == 'F')].shape[0]
     unmed_f_count_sham = df[(df['Medication Status'] == 'Unmed') & (df.State == 'sham') & (df['Gender'] == 'F')].shape[
         0]
 
@@ -496,13 +506,13 @@ def stat_summary(df, stat_tests=False):
 
     cauca_count_active = df[(df['Race'] == 'Caucasian') & (df.State == 'active')].shape[0]
     american_count_active = \
-    df[((df['Race'] == 'African American') | (df['Race'] == 'African american')) & (df.State == 'active')].shape[0]
+        df[((df['Race'] == 'African American') | (df['Race'] == 'African american')) & (df.State == 'active')].shape[0]
     asian_count_active = df[(df['Race'] == 'Asian') & (df.State == 'active')].shape[0]
     hispanic_count_active = df[(df['Race'] == 'Hispanic') & (df.State == 'active')].shape[0]
 
     cauca_count_sham = df[(df['Race'] == 'Caucasian') & (df.State == 'sham')].shape[0]
     american_count_sham = \
-    df[((df['Race'] == 'African American') | (df['Race'] == 'African american')) & (df.State == 'sham')].shape[0]
+        df[((df['Race'] == 'African American') | (df['Race'] == 'African american')) & (df.State == 'sham')].shape[0]
     asian_count_sham = df[(df['Race'] == 'Asian') & (df.State == 'sham')].shape[0]
     hispanic_count_sham = df[(df['Race'] == 'Hispanic') & (df.State == 'sham')].shape[0]
 
@@ -839,23 +849,125 @@ def stat_summary(df, stat_tests=False):
         except:
             p_val_cgig_v3 = 'na'
 
-        results = tmp_result.round(2), tmp_result_2.round(2), tmp_result_3.round(2), {'gender': p_val_gender,
-                                                                                      'medication status': p_val_med,
-                                                                                      'race': p_val_race,
-                                                                                      'gad-v1': p_val_gad_v1,
-                                                                                      'gad-v4': p_val_gad_v4,
-                                                                                      'ham-v1': p_val_ham_v1,
-                                                                                      'ham-v4': p_val_ham_v4,
-                                                                                      'cgis-v1': p_val_cgis_v1,
-                                                                                      'cgis-v2': p_val_cgis_v2,
-                                                                                      'cgis-v3': p_val_cgis_v3,
-                                                                                      'cgis-v4': p_val_cgis_v4,
-                                                                                      'cgig-v2': p_val_cgig_v2,
-                                                                                      'cgig-v3': p_val_cgig_v3,
-                                                                                      'cgig-v4': p_val_cgig_v4,
-                                                                                      'cgie-v2': p_val_cgie_v2,
-                                                                                      'cgie-v3': p_val_cgie_v3,
-                                                                                      'cgie-v4': p_val_cgie_v4}
+
+
+        p_val_gad_v1_ttest = \
+        ttest_ind(np.array(df[(df.State == 'sham') & ~(df['GAD-V1'].isna())]['GAD-V1']), np.array(df[(df.State == 'active') & ~(df['GAD-V1'].isna())]['GAD-V1']),
+                  equal_var=False)[1]
+        p_val_gad_v4_ttest = \
+        ttest_ind(np.array(df[(df.State == 'sham') & ~(df['GAD-V4'].isna())]['GAD-V4']), np.array(df[(df.State == 'active') & ~(df['GAD-V4'].isna())]['GAD-V4']),
+                  equal_var=False)[1]
+
+        p_val_ham_v1_ttest = \
+        ttest_ind(np.array(df[(df.State == 'sham') & ~(df['HAM-A-V1'].isna())]['HAM-A-V1']), np.array(df[(df.State == 'active') & ~(df['HAM-A-V1'].isna())]['HAM-A-V1']),
+                  equal_var=False)[1]
+        p_val_ham_v4_ttest = \
+        ttest_ind(np.array(df[(df.State == 'sham') & ~(df['HAM-A-V4'].isna())]['HAM-A-V4']), np.array(df[(df.State == 'active') & ~(df['HAM-A-V4'].isna())]['HAM-A-V4']),
+                  equal_var=False)[1]
+
+        p_val_cgis_v1_ttest = \
+        ttest_ind(np.array(df[(df.State == 'sham') & ~(df['CGIs-V1'].isna())]['CGIs-V1']), np.array(df[(df.State == 'active') & ~(df['CGIs-V1'].isna())]['CGIs-V1']),
+                  equal_var=False)[1]
+
+        p_val_cgis_v2_ttest = \
+        ttest_ind(np.array(df[(df.State == 'sham') & ~(df['CGIs-V2'].isna())]['CGIs-V2']), np.array(df[(df.State == 'active') & ~(df['CGIs-V2'].isna())]['CGIs-V2']),
+                  equal_var=False)[1]
+
+        p_val_cgis_v3_ttest = \
+        ttest_ind(np.array(df[(df.State == 'sham') & ~(df['CGIs-V3'].isna())]['CGIs-V3']), np.array(df[(df.State == 'active')& ~(df['CGIs-V3'].isna())]['CGIs-V3']),
+                  equal_var=False)[1]
+
+        p_val_cgis_v4_ttest = \
+        ttest_ind(np.array(df[(df.State == 'sham') & ~(df['CGIs-V4'].isna())]['CGIs-V4']), np.array(df[(df.State == 'active') & ~(df['CGIs-V4'].isna())]['CGIs-V4']),
+                  equal_var=False)[1]
+
+        p_val_cgig_v2_ttest = \
+        ttest_ind(np.array(df[(df.State == 'sham') & ~(df['CGIg-V2'].isna())]['CGIg-V2']), np.array(df[(df.State == 'active') & ~(df['CGIg-V2'].isna())]['CGIg-V2']),
+                  equal_var=False)[1]
+
+        p_val_cgig_v3_ttest = \
+        ttest_ind(np.array(df[(df.State == 'sham') & ~(df['CGIg-V3'].isna())]['CGIg-V3']), np.array(df[(df.State == 'active') & ~(df['CGIg-V3'].isna())]['CGIg-V3']),
+                  equal_var=False)[1]
+
+        p_val_cgig_v4_ttest = \
+        ttest_ind(np.array(df[(df.State == 'sham') & ~(df['CGIg-V4'].isna())]['CGIg-V4']), np.array(df[(df.State == 'active') & ~(df['CGIg-V4'].isna())]['CGIg-V4']),
+                  equal_var=False)[1]
+
+        tmp_result_4 = pd.DataFrame({'gender': [decimal_format(p_val_gender), 'na'],
+                                     'medication status': [decimal_format(p_val_med), 'na'],
+                                     'race': [decimal_format(p_val_race), 'na'],
+                                     'gad-v1': [decimal_format(p_val_gad_v1), decimal_format(p_val_gad_v1_ttest)],
+                                     'gad-v4': [decimal_format(p_val_gad_v4), decimal_format(p_val_gad_v4_ttest)],
+                                     'ham-v1': [decimal_format(p_val_ham_v1), decimal_format(p_val_ham_v1_ttest)],
+                                     'ham-v4': [decimal_format(p_val_ham_v4), decimal_format(p_val_ham_v4_ttest)],
+                                     'cgis-v1': [decimal_format(p_val_cgis_v1), decimal_format(p_val_cgis_v1_ttest)],
+                                     'cgis-v2': [decimal_format(p_val_cgis_v2), decimal_format(p_val_cgis_v2_ttest)],
+                                     'cgis-v3': [decimal_format(p_val_cgis_v3), decimal_format(p_val_cgis_v3_ttest)],
+                                     'cgis-v4': [decimal_format(p_val_cgis_v4), decimal_format(p_val_cgis_v4_ttest)],
+                                     'cgig-v2': [decimal_format(p_val_cgig_v2), decimal_format(p_val_cgig_v2_ttest)],
+                                     'cgig-v3': [decimal_format(p_val_cgig_v3), decimal_format(p_val_cgig_v3_ttest)],
+                                     'cgig-v4': [decimal_format(p_val_cgig_v4), decimal_format(p_val_cgig_v4_ttest)],
+                                     'cgie-v2': [decimal_format(p_val_cgie_v2), 'na'],
+                                     'cgie-v3': [decimal_format(p_val_cgie_v3), 'na'],
+                                     'cgie-v4': [decimal_format(p_val_cgie_v4), 'na']})
+
+
+
+
+        tmp_result_4.index = ['chi2 pvalue', 't test p value']
+
+        p_val_gad_active_ttest = \
+            ttest_ind(np.array(df[(df.State == 'active') & ~(df['GAD-V1'].isna())]['GAD-V1']),
+                      np.array(df[(df.State == 'active') & ~(df['GAD-V4'].isna())]['GAD-V4']),
+                      equal_var=False)[1]
+
+        p_val_gad_sham_ttest = \
+            ttest_ind(np.array(df[(df.State == 'sham') & ~(df['GAD-V1'].isna())]['GAD-V1']),
+                      np.array(df[(df.State == 'sham') & ~(df['GAD-V4'].isna())]['GAD-V4']),
+                      equal_var=False)[1]
+
+        p_val_ham_active_ttest = \
+            ttest_ind(np.array(df[(df.State == 'active') & ~(df['HAM-A-V1'].isna())]['HAM-A-V1']),
+                      np.array(df[(df.State == 'active') & ~(df['HAM-A-V4'].isna())]['HAM-A-V4']),
+                      equal_var=False)[1]
+
+        p_val_ham_sham_ttest = \
+            ttest_ind(np.array(df[(df.State == 'sham') & ~(df['HAM-A-V1'].isna())]['HAM-A-V1']),
+                      np.array(df[(df.State == 'sham') & ~(df['HAM-A-V4'].isna())]['HAM-A-V4']),
+                      equal_var=False)[1]
+
+        p_val_cgis_sham_ttest = \
+            ttest_ind(np.array(df[(df.State == 'sham') & ~(df['CGIs-V1'].isna())]['CGIs-V1']),
+                      np.array(df[(df.State == 'sham') & ~(df['CGIs-V4'].isna())]['CGIs-V4']),
+                      equal_var=False)[1]
+
+        p_val_cgis_active_ttest = \
+            ttest_ind(np.array(df[(df.State == 'active') & ~(df['CGIs-V1'].isna())]['CGIs-V1']),
+                      np.array(df[(df.State == 'active') & ~(df['CGIs-V4'].isna())]['CGIs-V4']),
+                      equal_var=False)[1]
+
+        p_val_cgig_active_ttest = \
+            ttest_ind(np.array(df[(df.State == 'active') & ~(df['CGIg-V2'].isna())]['CGIg-V2']),
+                      np.array(df[(df.State == 'active') & ~(df['CGIg-V4'].isna())]['CGIg-V4']),
+                      equal_var=False)[1]
+
+        p_val_cgig_sham_ttest = \
+            ttest_ind(np.array(df[(df.State == 'sham') & ~(df['CGIg-V2'].isna())]['CGIg-V2']),
+                      np.array(df[(df.State == 'sham') & ~(df['CGIg-V4'].isna())]['CGIg-V4']),
+                      equal_var=False)[1]
+
+        tmp_result_5 = pd.DataFrame({'HAM-A active': [decimal_format(p_val_ham_active_ttest)],
+                                     'HAM-A shame': [decimal_format(p_val_ham_sham_ttest)],
+                                     'GAD active': [decimal_format(p_val_gad_active_ttest)],
+                                     'GAD sham': [decimal_format(p_val_gad_sham_ttest)],
+                                     'CGI S active': [decimal_format(p_val_cgis_active_ttest)],
+                                     'CGI S sham': [decimal_format(p_val_cgis_sham_ttest)],
+                                     'CGI G active': [decimal_format(p_val_cgig_active_ttest)],
+                                     'CGI G sham': [decimal_format(p_val_cgig_sham_ttest)]})
+
+        tmp_result_5.index = ['t test p value']
+
+        results = tmp_result.round(2), tmp_result_2.round(2), tmp_result_3.round(2), tmp_result_4.round(2), tmp_result_5.round(2)
 
     else:
         results = tmp_result.round(2), tmp_result_2.round(2), tmp_result_3.round(2)
