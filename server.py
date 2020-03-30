@@ -62,11 +62,13 @@ def make_figure(tools, height, width, title, xlabel, ylabel, yrange=None, yticke
 def initial_run():
     global df
     global data_table_1, data_table_2, data_table_3
-    global gender_select, med_select, location_select, numdev_select, race_select, noisy_select, age_select
+    global gender_select, med_select, location_select, numdev_select, race_select, noisy_select, age_select, comp_select
     global compute_button
     global source_1, source_2, source_3
 
     compute_button = Button(label="Recompute stats", button_type='success', width=200)
+
+    comp_select = Select(title="Compliance rate selection", value="all", options=["all", "more than 33%", "not found or less than 33%"], width=200)
 
     noisy_select = Select(title="Noisy device selection", value="all", options=["all", "noisy", "not noisy"], width=200)
 
@@ -82,7 +84,7 @@ def initial_run():
 
     age_select = Select(title="Age selection", value="all", options = ['all', '40+', 'between 20 and 30', 'between 30 and 40'], width=200)
 
-    df = pd.read_csv('s3://science-box/clinical_trial/trial_v2.csv')
+    df = pd.read_csv('s3://science-box/clinical_trial/trial_v3.csv')
 
     df = pre_transform_df(df)
 
@@ -123,6 +125,7 @@ def stat_recompute():
     selected_race = str(race_select.value)
     selected_noisy = str(noisy_select.value)
     selected_age = str(age_select.value)
+    selected_comp = str(comp_select.value)
 
 
 
@@ -157,6 +160,12 @@ def stat_recompute():
     else:
         age = [selected_age]
 
+    if selected_comp == 'all':
+        comp = ["more than 33%", "not found or less than 33%"]
+
+    else:
+        comp = [selected_comp]
+
     if selected_dev == 'all':
         dev = [1, 2, 3, 4]
 
@@ -171,7 +180,7 @@ def stat_recompute():
         race = [selected_race]
 
 
-    tmp_df = df[(df.Gender.isin(genders)) & (df['Medication Status'].isin(med)) & (df['Location'].isin(loc)) & (df['# Devices'].isin(dev)) & (df['Race'].isin(race)) & (df['noisy'].isin(noisy)) & (df['age_group'].isin(age))]
+    tmp_df = df[(df.Gender.isin(genders)) & (df['Medication Status'].isin(med)) & (df['Location'].isin(loc)) & (df['# Devices'].isin(dev)) & (df['Race'].isin(race)) & (df['noisy'].isin(noisy)) & (df['age_group'].isin(age)) & (df['comp_group'].isin(comp))]
 
     results = stat_summary(tmp_df, stat_tests=True)
 
@@ -197,7 +206,7 @@ def button_callback():
         log.logger.info(f'logging for user {os.environ["APP_RESEARCH_USER"]}')
         curdoc().clear()
         initial_run()
-        l = layout([[head], [space_2], column(row(gender_select, med_select, location_select, numdev_select, noisy_select, race_select, age_select), compute_button), title_1, data_table_1, title_2, data_table_2, title_3, data_table_3])
+        l = layout([[head], [space_2], column(row(gender_select, med_select, location_select, numdev_select, noisy_select, race_select, age_select, comp_select), compute_button), title_1, data_table_1, title_2, data_table_2, title_3, data_table_3])
 
         curdoc().add_root(l)
     else:
