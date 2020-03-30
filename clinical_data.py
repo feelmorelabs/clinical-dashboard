@@ -30,6 +30,13 @@ def make_groups(row):
         return '>=15'
 
 
+def make_comp_groups(row):
+    if float(row) > 0.33:
+        return 'more than 33%'
+    else:
+        return 'not found or less than 33%'
+
+
 def pre_transform_df(df):
     for i in ['CGIe-V2', 'CGIe-V3', 'CGIe-V4']:
         df[i] = df[i].replace(
@@ -54,6 +61,10 @@ def pre_transform_df(df):
     df['Race'] = df['Race'].replace('African american', 'African American')
     df['Race'] = df['Race'].replace('African-American', 'African American')
     df['Race'] = df['Race'].fillna('Did not fill')
+
+    df['Compliance Rate'] = df['Compliance Rate'].replace('not found', -1)
+
+    df['comp_group'] = df['Compliance Rate'].apply(make_comp_groups)
 
     return df
 
