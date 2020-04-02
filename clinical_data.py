@@ -967,7 +967,11 @@ def stat_summary(df, stat_tests=False):
 
         tmp_result_5.index = ['t test p value']
 
-        results = tmp_result.round(2), tmp_result_2.round(2), tmp_result_3.round(2), tmp_result_4.round(2), tmp_result_5.round(2)
+
+
+        results = tmp_result.applymap(lambda x: round(x, 1) if isinstance(x, (int, float)) else x) , tmp_result_2.applymap(lambda x: round(x, 1) if isinstance(x, (int, float)) else x), \
+                  tmp_result_3.applymap(lambda x: round(x, 1) if isinstance(x, (int, float)) else x) , tmp_result_4.applymap(lambda x: round(x, 1) if isinstance(x, (int, float)) else x) , \
+                  tmp_result_5.applymap(lambda x: round(x, 1) if isinstance(x, (int, float)) else x)
 
     else:
         results = tmp_result.round(2), tmp_result_2.round(2), tmp_result_3.round(2)
