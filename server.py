@@ -43,7 +43,7 @@ title_2 = Div(text='visit by visit metrics', style={'font-size': '30px'}, width=
 title_3 = Div(text='Overall population metrics', style={'font-size': '30px'}, width=SPACE_WIDTH, height=BOX_HEIGHT)
 title_4 = Div(text='p values for active vs sham tests', style={'font-size': '30px'}, width=SPACE_WIDTH, height=BOX_HEIGHT)
 title_5 = Div(text='p values for pre vs post tests', style={'font-size': '30px'}, width=SPACE_WIDTH, height=BOX_HEIGHT)
-title_6 = Div(text='Pre identified subgrouped', style={'font-size': '30px'}, width=SPACE_WIDTH, height=BOX_HEIGHT)
+title_6 = Div(text='Pre identified subgroups', style={'font-size': '30px'}, width=SPACE_WIDTH, height=BOX_HEIGHT)
 
 
 def make_figure(tools, height, width, title, xlabel, ylabel, yrange=None, yticker=None, xticker=None, xlabeloverride=None, ylabeloverride=None,
@@ -203,6 +203,7 @@ def auto_gp_identification_computation():
     noise_comb = []
     comp_comb = []
     numdev_comb = []
+    _count = 0
 
     for _gend in partitions(all_genders, len(all_genders)):
         for _noise in partitions(all_noisy, len(all_noisy)):
@@ -211,6 +212,7 @@ def auto_gp_identification_computation():
                             for _dev in [{1}, {1,2,3,4}, {2,3,4}]:
                                     tmp_df = df[(df['# Devices'].isin(_dev)) & (df['comp_group'].isin(_comp)) & (df['Location'].isin(_loc)) & (df['noisy'].isin(_noise)) & (df['Gender'].isin(_gend))]
                                     if tmp_df.shape[0] > 10:
+                                        _count += 1
                                         tmpstat = stat_summary(tmp_df, stat_tests=True)[-2]
                                         tmpstat = tmpstat.replace('na', np.nan)
                                         pval = tmpstat.astype(float).min().min()
@@ -224,7 +226,7 @@ def auto_gp_identification_computation():
                                             #best_combs.append(tmp_comb)
 
 
-
+    title_6.text = f'Pre identified subgroups: found {len(gend_comb)} groups with at least 1 p value <= 0.05 and size >=10 among {_count}'
     comb_df = pd.DataFrame({'gender': gend_comb, 'location': loc_comb, 'noisy': noise_comb, 'compliance rate': comp_comb, 'num devices': numdev_comb})
 
     new_source_6 = ColumnDataSource(comb_df)
